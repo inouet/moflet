@@ -3,8 +3,28 @@
 namespace Moflet;
 
 /**
- * Pager
+ * HTML Pagination utility class
  *
+ * Example: 
+ * 
+ * <code>
+ *     $page     = $_GET['page'];
+ *     $per_page = 10;
+ *     $offset = Pager::getOffset($page, $per_page);
+ *
+ *     $sql = sprintf("select SQL_CALC_FOUND_ROWS * from users limit %d, %d",
+ *                    $offset, $per_page);
+ *     $list = $db->getAll($sql);
+ *
+ *     $total_items = $db->getOne("SELECT FOUND_ROWS()");
+ *     $config = array("per_page" => $per_page, "total_items" => $total_items, 
+ *                     "page" => $page);
+ *     $pager = new Pager($config);
+ *     echo $pager->render().PHP_EOL;
+ * </code>
+ *
+ * @package Moflet
+ * @author  Taiji Inoue <inudog@gmail.com>
  */
 class Pager {
 
@@ -34,6 +54,17 @@ class Pager {
         'last-inactive'     => "\n\t\t<li class=\"disabled\"><a href=#>&gt;&gt;</a></li>",
         );
 
+    /**
+     * Constructor
+     * 
+     * @param array $config
+     *  - total_items (int):   # total number of items
+     *  - per_page    (int):   # items per page
+     *  - delta       (int):   # pages to show before and after the current
+     *  - page_parameter_name (string): # http parameter name
+     *  - template    (string): # html template
+     *  - base_url    (string): # base url
+     */
     public function __construct(array $config = array()) {
         $keys = array('per_page', 'page', 'total_items', 'delta',
                       'page_parameter_name', 'base_url', 'template',
@@ -45,10 +76,21 @@ class Pager {
         }
     }
 
+    /**
+     * Get offset 
+     *
+     * @param int $page
+     * @param int $per_page
+     */
     public static function getOffset($page, $per_page) {
         return $per_page * ($page - 1);
     }
 
+    /**
+     * Render pagination html
+     *
+     * @return string
+     */
     public function render() {
         if ($this->total_items <= 0) {
             return '';
