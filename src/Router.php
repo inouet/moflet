@@ -46,6 +46,11 @@ class Router {
     public function match($uri) {
 
         $get_params = array();
+
+        if (strpos($uri, '#') !== false) {
+            list($uri,) = explode('#', $uri);
+        }
+
         if (strpos($uri, '?') !== false) {
             list($uri, $str) = explode('?', $uri);
             parse_str($str, $get_params);
@@ -144,6 +149,12 @@ class Router_Path {
     }
 
     private function _initialize() {
+        
+        if ($this->path === '/' || $this->path === '') {
+            $this->pattern = '|^/$|';
+            return;
+        }
+
         $parts = explode('/', trim($this->path, '/'));
         $list = array();
 
@@ -162,7 +173,7 @@ class Router_Path {
                 $list[] = "({$part})";
             }
         }
-        $this->pattern = '|/'.join('/', $list). '|';
+        $this->pattern = '|^/'.join('/', $list). '/?$|';
     }
 
     public function match($uri) {
