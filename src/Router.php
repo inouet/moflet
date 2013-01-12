@@ -53,7 +53,7 @@ class Router {
 
         foreach ($this->paths as $path) {
             $matches = $path->match($uri);
-            if ($matches) {
+            if ($matches !== false) {
                 $defaults     = $path->getDefaults();
                 $named_params = $path->getNamedParams();
                 return $this->_format($matches, $defaults, $named_params, $get_params);
@@ -105,6 +105,23 @@ class Router {
                         );
         return $result;
     }
+
+    /**
+     * Display all rules for debugging.
+     *
+     */
+    public function dump() {
+        foreach ($this->paths as $name => $path) {
+            echo "--------------------".PHP_EOL;
+            echo "name: {$name}".PHP_EOL;
+            echo "path: ". $path->getPath().PHP_EOL;
+            echo "pattern: ".$path->getPattern(). PHP_EOL;
+            echo "rules:".PHP_EOL;
+            print_r($path->getRules());
+            echo "defaults:".PHP_EOL;
+            print_r($path->getDefaults());
+        }
+    }
 }
 
 class Router_Path {
@@ -129,8 +146,11 @@ class Router_Path {
     private function _initialize() {
         $parts = explode('/', trim($this->path, '/'));
         $list = array();
+
         foreach ($parts as $i => $part) {
-            if (preg_match('/^:([a-zA-Z0-9_]+)/', $part, $matches)) {
+            if (strlen($part) == 0) {
+                $list[] = "";
+            } elseif (preg_match('/^:([a-zA-Z0-9_]+)/', $part, $matches)) {
                 $this->named_params[$matches[1]] = $i;
 
                 // TODO: rules
@@ -153,12 +173,24 @@ class Router_Path {
         return false;
     }
 
+    public function getPath() {
+        return $this->path;
+    }
+
     public function getNamedParams() {
         return $this->named_params;
     }
 
     public function getDefaults() {
         return $this->defaults;
+    }
+
+    public function getPattern() {
+        return $this->pattern;
+    }
+
+    public function getRules() {
+        return $this->rules;
     }
 }
 
