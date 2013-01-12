@@ -23,9 +23,16 @@ class Router_Test extends PHPUnit_Framework_TestCase {
         $router->add('blog_archive_show', '/blog/archives/:year/:month/',
                      array('controller' => 'archive', 'action' => 'show')
                      );
+
+        $router->add('blog_feed', '/feed/:type',
+                     array('controller' => 'blog', 'action' => 'feed', 'type' => 'rss')
+                     );
+
+        $router->add('info', '/info');
+
         $router->add('default', '/:controller/:action');
 
-        $router->dump();
+        // $router->dump();
 
         // home
         $expect = array('controller' => 'home', 'action' => 'index', 
@@ -69,6 +76,18 @@ class Router_Test extends PHPUnit_Framework_TestCase {
         $route = $router->match('/news/list?sort=date#header');
         $expect = array('controller' => 'news', 'action' => 'list', 
                         'params' => array('sort' => 'date'));
+        $this->assertEquals($expect, $route);
+
+        // blog_feed
+        $route = $router->match('/feed/atom');
+        $expect = array('controller' => 'blog', 'action' => 'feed', 
+                        'params' => array('type' => 'atom'));
+        $this->assertEquals($expect, $route);
+
+        // info
+        $route = $router->match('/info');
+        $expect = array('controller' => 'info', 'action' => '', 'params' => array());
+                        
         $this->assertEquals($expect, $route);
 
         // no match
