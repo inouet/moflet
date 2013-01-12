@@ -4,8 +4,7 @@ require_once("../src/Router.php");
 
 use Moflet\Router;
 
-class Router_Test extends PHPUnit_Framework_TestCase
-{
+class Router_Test extends PHPUnit_Framework_TestCase {
 
     public function setup() {
     }
@@ -14,32 +13,69 @@ class Router_Test extends PHPUnit_Framework_TestCase
 
         $router = Router::getInstance();
 
-        $router->add('home', '/', array('controller' => 'home', 'action' => 'index'));
+        $router->add('home', '/', 
+                     array('controller' => 'home', 'action' => 'index')
+                     );
         $router->add('entry_show', '/entry/:id', 
-            array('controller' => 'entry', 'action' => 'show')
-        );
+                     array('controller' => 'entry', 'action' => 'show')
+                     );
+
+        $router->add('blog_archive_show', '/blog/archives/:year/:month/',
+                     array('controller' => 'archive', 'action' => 'show')
+                     );
         $router->add('default', '/:controller/:action');
 
+        $router->dump();
+
         // home
+        $expect = array('controller' => 'home', 'action' => 'index', 
+                        'params' => array());
         $route = $router->match('/');
-        $expect = array('controller' => 'home', 'action' => 'index', 'params' => array());
         $this->assertEquals($expect, $route);
         
+        $expect = array('controller' => 'home', 'action' => 'index', 
+                        'params' => array('sort' => 'id'));
+        $route = $router->match('/?sort=id#home');
+        $this->assertEquals($expect, $route);
+
+        $expect = false;
+        $route = $router->match('/index.php');
+        $this->assertEquals($expect, $route);
+
+
         // entry_show
+        $expect = array('controller' => 'entry', 'action' => 'show', 
+                        'params' => array('id' => 12));
         $route = $router->match('/entry/12');
-        $expect = array('controller' => 'entry', 'action' => 'entry_show', 'params' => array('id' => 12));
+        $this->assertEquals($expect, $route);
+      
+        $route = $router->match('/entry/12/');
+        $this->assertEquals($expect, $route);
+
+        // archive_show
+        $expect = array('controller' => 'archive', 'action' => 'show', 
+                        'params' => array('year' => '2012',
+                                          'month' => '01',
+                                          ));
+        $route = $router->match('/blog/archives/2012/01/');
         $this->assertEquals($expect, $route);
 
         // default
+        $expect = array('controller' => 'news', 'action' => 'list', 
+                        'params' => array('sort' => 'date'));
         $route = $router->match('/news/list?sort=date');
-        $expect = array('controller' => 'news', 'action' => 'list', 'params' => array('sort' => 'date'));
         $this->assertEquals($expect, $route);
-#        print_r($route);
 
         $route = $router->match('/news/list?sort=date#header');
-        $expect = array('controller' => 'news', 'action' => 'list', 'params' => array());
+        $expect = array('controller' => 'news', 'action' => 'list', 
+                        'params' => array('sort' => 'date'));
         $this->assertEquals($expect, $route);
-#        print_r($route);
+
+        // no match
+        $route = $router->match('/index.php');
+        $expect = false;
+        $this->assertEquals($expect, $route);
+
     }
 }
 
