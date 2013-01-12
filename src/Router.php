@@ -88,7 +88,7 @@ class Router {
             unset($named_params['action']);
         } elseif (array_key_exists('action', $defaults)) {
             $action = $defaults['action'];
-        } elseif ($matches[1]) {
+        } elseif (@$matches[1]) {
             $action = $matches[1];
         }
 
