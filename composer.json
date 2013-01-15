@@ -1,5 +1,5 @@
 {
-    "name": "Moflet/core",
+    "name": "moflet/core",
     "require": {
         "php": ">=5.3.3"
     }
