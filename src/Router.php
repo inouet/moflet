@@ -38,7 +38,7 @@ class Router {
         return self::$instances[$name];
     }
 
-    public function add($name, $path, $defaults = array(), $rules = array()) {
+    public function add($name, $path, array $defaults = array(), array $rules = array()) {
         $path = new Router_Path($path, $defaults, $rules);
         $this->paths[$name] = $path;
     }
