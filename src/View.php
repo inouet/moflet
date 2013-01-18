@@ -18,6 +18,8 @@ class View {
 
     private $template_dir;
 
+    private $template;
+
     /**
      * Set variables
      *
@@ -37,18 +39,17 @@ class View {
     /**
      * Render template file
      *
-     * @param  strring $template
      * @return string $contents
      */
-    public function render($template) {
+    public function render() {
         extract($this->data);
 
-        if (!is_file($this->template_dir . '/'. $template)) {
+        if (!is_file($this->template_dir . '/'. $this->template)) {
             return false;
         }
         
         ob_start();
-        include $this->template_dir . '/'. $template;
+        include $this->template_dir . '/'. $this->template;
         $contents = ob_get_clean();
 
         if ($this->layout && is_file($this->template_dir.'/'.$this->layout)) {
@@ -66,6 +67,15 @@ class View {
      */
     public function setTemplateDir($template_dir) {
         $this->template_dir = $template_dir;
+    }
+
+    /**
+     * Set template file
+     * 
+     * @param string $template
+     */
+    public function setTemplate($template) {
+        $this->template = $template;
     }
 
     /**
