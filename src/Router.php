@@ -127,6 +127,29 @@ class Router {
             print_r($path->getDefaults());
         }
     }
+
+    public function generate($name, $params) {
+        if (!isset($this->paths[$name])) {
+            return false;
+        }
+        $path = $this->paths[$name];
+        $uri  = $path->getPath();
+        $named_params = $path->getNamedParams();
+        if ($named_params) {
+            foreach ($named_params as $name => $index) {
+                $value = '';
+                if (array_key_exists($name, $params)) {
+                    $value = $params[$name];
+                    unset($params[$name]);
+                }
+                $uri = str_replace(":{$name}", $value, $uri);
+            }
+        }
+        if ($params) {
+            $uri = $uri . '?'. http_build_query($params);
+        }
+        return $uri;
+    }
 }
 
 class Router_Path {
