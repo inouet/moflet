@@ -95,6 +95,11 @@ class Router_Test extends PHPUnit_Framework_TestCase {
         $expect = false;
         $this->assertEquals($expect, $route);
 
+        $params = array("id" => "3", "rand" => 123);
+        $url = $router->generate('entry_show', $params);
+        $expect = "/entry/3?rand=123";
+        $this->assertEquals($expect, $url);
+
     }
 }
 
