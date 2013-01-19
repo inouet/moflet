@@ -15,11 +15,12 @@ class Dispacher {
 
     public function dispatch () {
         try {
-            $html  = null;
-            $path  = $this->getPath();
-            $route = $this->getRoute($path);
-            
-            if (!isset($route['controller']) || !isset($route['action'])) {
+            $html   = null;
+            $uri    = $this->getRequestUri();
+            $router = $this->getRouter();
+
+            $route = $router->match($uri);
+            if ($router === false || !isset($route['controller']) || !isset($route['action'])) {
                 throw new \Exception('No route found');
             }
             
@@ -52,7 +53,7 @@ class Dispacher {
         }
     }
 
-    public function getRoute($path = '/') {
+    protected function getRouter() {
         $config = include MOF_CONFIG_DIR . '/routing.php';
 
         $router = Router::getInstance();
@@ -62,11 +63,10 @@ class Dispacher {
             }
             $router->add($name, $setting[0], $setting[1], $setting[2]);
         }
-        $route = $router->match($path);
-        return $route;
+        return $router;
     }
 
-    private function getPath() {
+    protected function getRequestUri() {
         $path = '/';
         if (isset($_SERVER['PATH_INFO'])) {
             $path = $_SERVER['PATH_INFO'];
