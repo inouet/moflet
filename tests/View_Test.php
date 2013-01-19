@@ -1,6 +1,6 @@
 <?php
 
-require_once("../src/View.php");
+require_once("../src/Moflet/View.php");
 
 use Moflet\View;
 
