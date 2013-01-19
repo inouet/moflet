@@ -1,6 +1,9 @@
 {
     "name": "moflet/core",
     "version": "0.0.1",
+    "autoload": {
+        "psr-0": {"Moflet": "src/"}
+    },
     "require": {
         "php": ">=5.3.3"
     }
