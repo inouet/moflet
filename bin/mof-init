@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+function main() {
+    global $argv;
+
+    $skel_dir = realpath(__DIR__.'/../skel/');
+    $app_dir  = getcwd();  
+    $core_dir = realpath(dirname(__DIR__).'/src');
+
+    system("cp -r {$skel_dir}/ {$app_dir}/");
+
+    $core_path = relative_path_from_absolute($app_dir, $core_dir);
+    $index_php = $app_dir . '/public/index.php';
+
+    $replace = array('{MOF_CORE_DIR}' => $core_path);
+    str_replace_file($replace, $index_php);
+}
+
+function str_replace_file(array $replace, $file) {
+    $src = $_src = file_get_contents($file);
+    foreach ($replace as $search => $replace) {
+        $_src = str_replace($search, $replace, $_src);
+    }
+    if ($src != $_src) {
+        file_put_contents($file, $_src);
+    }
+}
+
+function relative_path_from_absolute($from_dir, $to_dir) {
+    $ds = DIRECTORY_SEPARATOR;
+    $from_array = explode($ds, rtrim($from_dir, $ds));
+    $to_array   = explode($ds, rtrim($to_dir, $ds));
+    
+    while (count($from_array) && count($to_array) && 
+           $from_array[0] === $to_array[0]) {
+        array_shift($from_array);
+        array_shift($to_array);
+    }
+    $dirs = array();
+    for ($i = 0; $i < count($from_array); $i++) {
+        $dirs[] = "..";
+    }
+    $dirs = array_merge($dirs, $to_array);
+    return join($ds, $dirs);
+}
+
+main();
+
