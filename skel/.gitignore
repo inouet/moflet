@@ -1,0 +1,7 @@
+# Moflet directories
+vendor/*
+
+# Other files
+Thumbs.db
+.DS_Store
+*~
