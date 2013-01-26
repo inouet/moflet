@@ -24,20 +24,10 @@ class Dispacher {
                 throw new \Exception('No route found');
             }
             
-            $controller_class = sprintf('%sController', $this->toCamelCase($route['controller'], true));
-            $action_name = sprintf('%sAction', $this->toCamelCase($route['action']));
-            
-            $controller_class_file = MOF_CONTROLLER_DIR . '/'. $controller_class . '.php';
-            if (file_exists($controller_class_file)) {
-                require_once(MOF_CONTROLLER_DIR . '/'. $controller_class . '.php');
-            }
-            
-            if (!class_exists($controller_class)) {
-                throw new \Exception('Controller Not Found: '. $controller_class);
-            }
-            
-            $controller = new $controller_class();
+            $controller = $this->getController($router['controller']);
             $controller->initialize();
+
+            $action_name = $this->getActionName($router['action']);
             if (!method_exists($controller, $action_name)) {
                 throw new \Exception('Method Not Found: '. $action_name);
             }
@@ -53,6 +43,54 @@ class Dispacher {
         }
     }
 
+    /**
+     * Get Controller class instance
+     *
+     * @param string $controller
+     * @return \Moflet\Controller
+     */
+    public function getController($controller) {
+        $controller_name = $this->getControllerClassName($controller);
+            
+        $controller_file = MOF_CONTROLLER_DIR . '/'. $controller_name . '.php';
+        if (file_exists($controller_file)) {
+            require_once($controller_file);
+        }
+        
+        if (!class_exists($controller_name)) {
+            throw new \Exception('Controller Not Found: '. $controller_name);
+        }
+        $controller = new $controller_name();
+        return $controller;
+    }
+
+    /**
+     * Get controller class name
+     * 
+     * @param  string $string
+     * @return string $class_name  ex) user_home -> UserHomeController
+     */
+    public function getControllerClassName($string) {
+        $class_name = sprintf('%sController', $this->toCamelCase($string, true));
+        return $class_name;
+    }
+
+    /**
+     * Get action method name
+     * 
+     * @param  string $string
+     * @return string $action_name  ex) profile_input -> profileInputAction
+     */
+    public function getActionName($string) {
+        $action_name = sprintf('%sAction', $this->toCamelCase($string));
+        return $action_name;
+    }
+    
+    /**
+     * Get Router instance
+     *
+     * @return \Moflet\Router
+     */
     protected function getRouter() {
         $config = include MOF_CONFIG_DIR . '/routing.php';
 
@@ -82,4 +120,5 @@ class Dispacher {
         $parts[0] = $ucfirst ? ucfirst($parts[0]) : lcfirst($parts[0]);
         return implode('', $parts);
     }
+
 }
