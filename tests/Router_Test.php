@@ -1,6 +1,6 @@
 <?php
 
-require_once("../src/Moflet/Router.php");
+require_once __DIR__."/../src/Moflet/Router.php";
 
 use Moflet\Router;
 

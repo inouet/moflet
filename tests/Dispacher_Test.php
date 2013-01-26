@@ -1,6 +1,6 @@
 <?php
 
-require_once "../src/Moflet/Dispacher.php";
+require_once __DIR__."/../src/Moflet/Dispacher.php";
 
 use Moflet\Dispacher;
 

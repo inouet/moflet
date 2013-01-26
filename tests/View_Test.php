@@ -1,6 +1,6 @@
 <?php
 
-require_once("../src/Moflet/View.php");
+require_once __DIR__."/../src/Moflet/View.php";
 
 use Moflet\View;
 
