@@ -14,11 +14,12 @@ class View_Test extends PHPUnit_Framework_TestCase {
         $template = "test01.html";
 
         $view->setTemplateDir(__DIR__.'/view');
+        $view->setTemplate($template);
         $view->set('name', 'John');
         $hash = array("age" => 20, "sex" => 1);
         $view->set('hash', $hash);
         
-        $html = $view->render($template);
+        $html = $view->render();
 
         $expect = "Hello John!\nage:20\nsex:1\n";
 
