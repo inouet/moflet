@@ -24,10 +24,10 @@ class Dispacher {
                 throw new \Exception('No route found');
             }
             
-            $controller = $this->getController($router['controller']);
+            $controller = $this->getController($route['controller']);
             $controller->initialize();
 
-            $action_name = $this->getActionName($router['action']);
+            $action_name = $this->getActionName($route['action']);
             if (!method_exists($controller, $action_name)) {
                 throw new \Exception('Method Not Found: '. $action_name);
             }
