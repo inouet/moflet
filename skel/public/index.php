@@ -14,11 +14,12 @@ define('MOF_TMP_DIR', MOF_APP_DIR . '/var/tmp');
 define('MOF_LOG_DIR', MOF_APP_DIR . '/var/logs');
 define('MOF_CACHE_DIR', MOF_APP_DIR . '/var/cache');
 
-define('MOF_CORE_DIR', '{MOF_CORE_DIR}');
+define('MOF_CORE_DIR', MOF_APP_DIR . '/vendor/moflet/moflet/src');
 
+// Use Composer autoloader
 $loader = include MOF_APP_DIR . '/vendor/autoload.php';
-
-require_once MOF_CORE_DIR . '/Moflet/Dispacher.php';
+$loader->add(null, MOF_MODEL_DIR);
+$loader->add(null, MOF_CONTROLLER_DIR);
 
 $dispacher = new Moflet\Dispacher();
 $dispacher->dispatch();
