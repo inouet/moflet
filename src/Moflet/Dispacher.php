@@ -4,6 +4,7 @@ namespace Moflet;
 
 require_once 'Router.php';
 require_once 'Controller.php';
+require_once 'Config.php';
 
 /**
  * Dispacher
@@ -15,6 +16,9 @@ class Dispacher {
 
     public function dispatch () {
         try {
+
+            Config::readDirectory(MOF_CONFIG_DIR);
+
             $html   = null;
             $uri    = $this->getRequestUri();
             $router = $this->getRouter();
@@ -92,8 +96,7 @@ class Dispacher {
      * @return \Moflet\Router
      */
     protected function getRouter() {
-        $config = include MOF_CONFIG_DIR . '/routing.php';
-
+        $config = Config::get('routing');
         $router = Router::getInstance();
         foreach ($config as $name => $setting) {
             if (!isset($setting[2])) {
