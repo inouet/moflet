@@ -16,7 +16,7 @@ Installation
 
     {
         "require": {
-            "moflet/core": "dev-master"
+            "moflet/moflet": "dev-master"
          }
     }
 
