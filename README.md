@@ -26,5 +26,5 @@ Installation
 
 ### Setup Project
 
-    $ php vendor/moflet/core/bin/mof-init
+    $ php vendor/moflet/moflet/bin/mof-init
 
