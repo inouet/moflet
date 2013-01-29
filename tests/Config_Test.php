@@ -43,7 +43,7 @@ class Config_Test extends PHPUnit_Framework_TestCase {
             'cache' => $cache,
         );
 
-        Config::read(__DIR__. '/config/');
+        Config::readDirectory(__DIR__. '/config/');
         $config = Config::all();
 
         $this->assertEquals($expect, $config);

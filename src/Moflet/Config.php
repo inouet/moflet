@@ -51,18 +51,30 @@ class Config {
     }
 
     /**
-     * Read config file or directory
+     * Read config file
      *
+     * @param  string $file
      * Note: Config file must retun value.
      */
-    public static function read($file) {
-        if (is_dir($file)) { // directory
-            $files = glob($file."/*.php");
-            foreach ($files as $_file) {
-                self::_read($_file);
+    public static function read($file) {  
+        if (is_file($file)) {
+            $key   = basename($file, '.php');
+            $value = include $file;
+            self::set($key, $value);
+        }
+    }
+
+    /**
+     * Read config files in specified directory
+     *
+     * @param  string $dir
+     */
+    public static function readDirectory($dir) {
+        if (is_dir($dir)) { 
+            $files = glob("{$dir}/*.php");
+            foreach ($files as $file) {
+                self::read($file);
             }
-        } elseif (is_file($file)) { // file
-            self::_read($file);
         }
     }
 
@@ -72,12 +84,6 @@ class Config {
      */
     public static function clear() {
         self::$config = array();
-    }
-
-    private static function _read($file) {
-        $key   = basename($file, '.php');
-        $value = include $file;
-        self::set($key, $value);
     }
 }
 
