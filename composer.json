@@ -1,5 +1,5 @@
 {
-    "name": "moflet/core",
+    "name": "moflet/moflet",
     "version": "0.0.1",
     "autoload": {
         "psr-0": {"Moflet": "src/"}
