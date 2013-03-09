@@ -9,11 +9,14 @@ Installation
 
 ### Setup composer
 
+    $ cd /www/HOST/     # Project Directory
     $ curl -s https://getcomposer.org/installer | php
 
 
 ### Create composer.json 
 
+    $ vi composer.json 
+    
     {
         "require": {
             "moflet/moflet": "dev-master"
@@ -34,12 +37,12 @@ Installation
     $ vi httpd.conf
 
     <VirtualHost *:80>
-        DocumentRoot /www/HOST/htdocs/
+        DocumentRoot /www/HOST/public/
         ServerName HOST
         ErrorLog  logs/HOST.error_log
         CustomLog logs/HOST.access_log common
 
-        <Directory /www/HOST/htdocs/>
+        <Directory /www/HOST/public/>
             RewriteEngine on
             RewriteBase /
             RewriteCond %{REQUEST_FILENAME} !-d
