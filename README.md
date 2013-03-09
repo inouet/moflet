@@ -48,5 +48,6 @@ Installation
             RewriteCond %{REQUEST_FILENAME} !-d
             RewriteCond %{REQUEST_FILENAME} !-f
             RewriteCond $1 !^(index\.php|images|robots\.txt|favicon\.ico)
+            RewriteRule ^(.*)$ /index.php/$1 [L]
         </Directory>
     </VirtualHost>
